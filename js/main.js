@@ -19,41 +19,41 @@ email: simonmill@gmail.com
 var numStudents = document.getElementsByClassName('student-list')[0].children.length;	//number of students
 var numLinks = Math.ceil(numStudents / 10);												//number of pagination links needed
 
-//testing
-var testingFunction = function() {
+//This function selects the links inside the class 'pagination', then removes the class 'active' from all of them. 
+//It then adds the class 'active' to the one selected (used in newA.addEventListener('click', removeClassAddClass);)
+var removeClassAddClass = function() {												//start removeClassAddClass function
     
-	var test = document.getElementsByClassName('pagination');
-	for (var i = 0; i < test.length; i++) {
-    var a = test[i].getElementsByTagName('a');
+	var div = document.getElementsByClassName('pagination');						//selects the div with the class 'pagination' and stores it in the var div
+	var a = div[0].getElementsByTagName('a');										//selects the links inside the div variable and stores it in the var a
 
-	this.className = 'active';
-}; ???????????????????????????????????????????????????
+	for (var i = 0; i < numLinks; i++) {											//cycles through the same number of times as the number of pagination links at the bottom of the page
+   		a[i].classList.remove("active");											//cycles through the links and removes class='active' 
+	}
+
+	this.classList.add('active');													//whichever link is selected - add class='active'
+}																					//end removeClassAddClass function
+
 
 //This function dynamically adds pagination
 	
 function createPagination() {														//start of createPagination() function
 	
-
-	var selectElem = document.getElementsByClassName('page')[0];					//select first element with class 'page'
-		
-	var newDiv = selectElem.appendChild(document.createElement('div'));				//create <div> and append it to element with class='page'
-		newDiv.className = 'pagination';											//set <div>'s class to 'pagination'
-
-	var newOl = newDiv.appendChild(document.createElement('ol')); 					//create <ol> and append it to <div class='pagination'>	
+	var selectElem = document.getElementsByClassName('page');						//selects all elements with class 'page'
+	var div = selectElem[0].appendChild(document.createElement('div'));				//create <div> and append it to first element with class='page'
+		div.classList.add('pagination');											//adds a class of 'pagination to the <div>
+	var ol = div.appendChild(document.createElement('ol')); 						//create <ol> and append it to <div class='pagination'>	
 
 	for (var i = 0; i < numLinks; i++)	{											//start for loop that creates <li>s
-		var newLi = newOl.appendChild(document.createElement('li'));				//create <li> and append it to <ol>
-		
-		var newA = newLi.appendChild(document.createElement('a'));					//create <a> and append it to <li>	
-			//newA.className = 'active';											//set <a class='active'></a>
-			newA.href = '#';														//set <a href='#'></a>
-			newA.textContent = i + 1;												//set <a>1</a> for first link <a>2</a> for second link etc.
-			newA.addEventListener('click', testingFunction);
+		var li = ol.appendChild(document.createElement('li'));						//create <li> and append it to <ol>
+		var a = li.appendChild(document.createElement('a'));						//create <a> and append it to <li>	
+		a.href = '#';																//set <a href='#'></a>
+		a.textContent = i + 1;														//set <a>1</a> for first link <a>2</a> for second link etc.
+		a.addEventListener('click', removeClassAddClass);							//adds an eventlistener so that on click - it runs the function removeClassAddClass
 	}																				//end for loop
-}																					//end of createPagination() function
 
-createPagination(); 																//call createPagination() function
-/*for (var i = 0; i < numLinks; i++) {
-		document.getElementsByClassName('pagination').removeAttribute("class");
-	}
-	this.className = 'active';*/
+	var pagination = document.getElementsByClassName('pagination');					//selects all elements with class of 'pagination'
+	var link = pagination[0].getElementsByTagName('a');								//select all links inside first element with class of 'pagination'
+	link[0].classList.add('active');												//select first link inside first element with class of 'pagination' & add class='active'
+}																					//end of createPagination() function
+																					
+createPagination();																	//call createPagination() function
