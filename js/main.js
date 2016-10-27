@@ -10,29 +10,46 @@ email: simonmill@gmail.com
 //When page loads - hide all students
 
 	//select students and .hide() body <ul class="student-list">
-	document.getElementsByClassName("student-list")[0].style.display = 'none';
+	//document.getElementsByClassName('student-list')[0].classList.toggle('hideStudents')
 
 //calculate how many page-links are needed
-	//number of students
-	//divided by 10
-	// - 1
 var numStudents = document.getElementsByClassName('student-list')[0].children.length;	//number of students
 var numLinks = Math.ceil(numStudents / 10);												//number of pagination links needed
 
 //This function selects the links inside the class 'pagination', then removes the class 'active' from all of them. 
-//It then adds the class 'active' to the one selected (used in newA.addEventListener('click', removeClassAddClass);)
+//It then adds the class 'active' to the one selected (used createPagination())
 var removeClassAddClass = function() {												//start removeClassAddClass function
     
 	var div = document.getElementsByClassName('pagination');						//selects the div with the class 'pagination' and stores it in the var div
 	var a = div[0].getElementsByTagName('a');										//selects the links inside the div variable and stores it in the var a
 
 	for (var i = 0; i < numLinks; i++) {											//cycles through the same number of times as the number of pagination links at the bottom of the page
-   		a[i].classList.remove("active");											//cycles through the links and removes class='active' 
+   		a[i].classList.remove('active');											//cycles through the links and removes class='active' 
 	}
 
 	this.classList.add('active');													//whichever link is selected - add class='active'
 }																					//end removeClassAddClass function
 
+//This function calculates which students should be shown
+var calculateShowStudents = function(){ 
+	var value = parseInt(this.textContent); 
+	
+	//Calculate top number
+	var topNumber = (value * 10);
+	
+	//Calculate bottom number
+	var bottomNumber = topNumber - 10;
+
+	//testing:
+	for (var i = 0; i < numStudents; i++){
+		//show students when bottom number <=  x  <  topnumber
+		if (bottomNumber <= i && i < topNumber) {
+			document.getElementsByClassName('student-item cf')[i].classList.remove('hideStudents');
+		} else {
+			document.getElementsByClassName('student-item cf')[i].classList.add('hideStudents');
+		} 
+	}
+}
 
 //This function dynamically adds pagination
 	
@@ -48,7 +65,9 @@ function createPagination() {														//start of createPagination() functio
 		var a = li.appendChild(document.createElement('a'));						//create <a> and append it to <li>	
 		a.href = '#';																//set <a href='#'></a>
 		a.textContent = i + 1;														//set <a>1</a> for first link <a>2</a> for second link etc.
+		a.addEventListener('click', calculateShowStudents);
 		a.addEventListener('click', removeClassAddClass);							//adds an eventlistener so that on click - it runs the function removeClassAddClass
+		
 	}																				//end for loop
 
 	var pagination = document.getElementsByClassName('pagination');					//selects all elements with class of 'pagination'
@@ -57,3 +76,7 @@ function createPagination() {														//start of createPagination() functio
 }																					//end of createPagination() function
 																					
 createPagination();																	//call createPagination() function
+calculateShowStudents;
+//show those students
+
+//.classList.toggle('newClassName')
