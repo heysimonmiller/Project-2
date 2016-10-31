@@ -9,9 +9,6 @@ email: simonmill@gmail.com
 
 //When page loads - hide all students
 
-	//select students and .hide() body <ul class="student-list">
-	//document.getElementsByClassName('student-list')[0].classList.toggle('hideStudents')
-
 //calculate how many page-links are needed
 var numStudents = document.getElementsByClassName('student-list')[0].children.length;	//number of students
 var numLinks = Math.ceil(numStudents / 10);												//number of pagination links needed
@@ -31,8 +28,8 @@ var removeClassAddClass = function() {												//start removeClassAddClass fu
 }																					//end removeClassAddClass function
 
 //This function calculates which students should be shown
-var calculateShowStudents = function(){ 
-	var value = parseInt(this.textContent); 
+var calculateShowStudents = function(textContent) { 
+	var value = parseInt(textContent); 
 	
 	//Calculate top number
 	var topNumber = (value * 10);
@@ -40,7 +37,7 @@ var calculateShowStudents = function(){
 	//Calculate bottom number
 	var bottomNumber = topNumber - 10;
 
-	//testing:
+	//cycle through students and add class 'hideStudents' to students not wanting to be shown
 	for (var i = 0; i < numStudents; i++){
 		//show students when bottom number <=  x  <  topnumber
 		if (bottomNumber <= i && i < topNumber) {
@@ -52,7 +49,7 @@ var calculateShowStudents = function(){
 }
 
 //This function dynamically adds pagination
-	
+
 function createPagination() {														//start of createPagination() function
 	
 	var selectElem = document.getElementsByClassName('page');						//selects all elements with class 'page'
@@ -65,7 +62,7 @@ function createPagination() {														//start of createPagination() functio
 		var a = li.appendChild(document.createElement('a'));						//create <a> and append it to <li>	
 		a.href = '#';																//set <a href='#'></a>
 		a.textContent = i + 1;														//set <a>1</a> for first link <a>2</a> for second link etc.
-		a.addEventListener('click', calculateShowStudents);
+		a.addEventListener('click', calculateShowStudents.bind(null, a.textContent));
 		a.addEventListener('click', removeClassAddClass);							//adds an eventlistener so that on click - it runs the function removeClassAddClass
 		
 	}																				//end for loop
@@ -76,7 +73,8 @@ function createPagination() {														//start of createPagination() functio
 }																					//end of createPagination() function
 																					
 createPagination();																	//call createPagination() function
-calculateShowStudents;
+calculateShowStudents(1);
+
 //show those students
 
 //.classList.toggle('newClassName')
