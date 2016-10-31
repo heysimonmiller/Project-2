@@ -7,7 +7,6 @@ email: simonmill@gmail.com
 // ** ------------> Problem: No pagination when page loads
 // ** ------------> Solution: Add pagination
 
-//When page loads - hide all students
 
 //calculate how many page-links are needed
 var numStudents = document.getElementsByClassName('student-list')[0].children.length;	//number of students
@@ -71,10 +70,43 @@ function createPagination() {														//start of createPagination() functio
 	var link = pagination[0].getElementsByTagName('a');								//select all links inside first element with class of 'pagination'
 	link[0].classList.add('active');												//select first link inside first element with class of 'pagination' & add class='active'
 }																					//end of createPagination() function
-																					
-createPagination();																	//call createPagination() function
-calculateShowStudents(1);
 
-//show those students
 
-//.classList.toggle('newClassName')
+var createSearchBar = function() {
+
+	//create search bar
+	var editInput = document.createElement('INPUT');
+	editInput.setAttribute('type', 'search');
+	
+	//append search bar
+	document.getElementsByClassName('page-header cf')[0].appendChild(editInput);
+	
+	//style search bar
+	editInput.parentNode.style.position = 'relative';
+	editInput.style.position = 'absolute';
+	editInput.style.right = '0px';
+	editInput.placeholder = 'Search For a Student'
+}																					
+
+var init = function() {
+	createPagination();																	//call createPagination() function
+	calculateShowStudents(1);
+	createSearchBar();
+}
+
+init();
+
+//Testing ---- SEARCH FEATURE
+
+
+
+
+/*
+var searchBar = document.getElementById('searchInputId');
+    searchBar.addEventListener('submit',function(e) {
+        e.preventDefault();
+        var b = searchBar.value;
+        window.location.href = 'http://mywebsite.com/'+b;
+
+    });
+*/
