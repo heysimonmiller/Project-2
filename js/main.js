@@ -26,6 +26,7 @@ var removeClassAddClass = function() {												//start removeClassAddClass fu
 	this.classList.add('active');													//whichever link is selected - add class='active'
 }																					//end removeClassAddClass function
 
+
 //This function calculates which students should be shown
 var calculateShowStudents = function(textContent) { 
 	var value = parseInt(textContent); 
@@ -47,66 +48,98 @@ var calculateShowStudents = function(textContent) {
 	}
 }
 
+
 //This function dynamically adds pagination
+var createPagination = function() {		//start of createPagination function
 
-function createPagination() {														//start of createPagination() function
-	
-	var selectElem = document.getElementsByClassName('page');						//selects all elements with class 'page'
-	var div = selectElem[0].appendChild(document.createElement('div'));				//create <div> and append it to first element with class='page'
-		div.classList.add('pagination');											//adds a class of 'pagination to the <div>
-	var ol = div.appendChild(document.createElement('ol')); 						//create <ol> and append it to <div class='pagination'>	
+	//creates a div that has class='pagination' with an ordered list inside and appends that to a div with class='page' 
+	var selectElem = document.getElementsByClassName('page');
+	var div = selectElem[0].appendChild(document.createElement('div'));
+		div.classList.add('pagination');
+	var ol = div.appendChild(document.createElement('ol'));
 
-	for (var i = 0; i < numLinks; i++)	{											//start for loop that creates <li>s
-		var li = ol.appendChild(document.createElement('li'));						//create <li> and append it to <ol>
-		var a = li.appendChild(document.createElement('a'));						//create <a> and append it to <li>	
-		a.href = '#';																//set <a href='#'></a>
-		a.textContent = i + 1;														//set <a>1</a> for first link <a>2</a> for second link etc.
-		a.addEventListener('click', calculateShowStudents.bind(null, a.textContent));
-		a.addEventListener('click', removeClassAddClass);							//adds an eventlistener so that on click - it runs the function removeClassAddClass
+
+	//cycles through depending on how many students there are & creates list items with links for pagination
+	for (var i = 0; i < numLinks; i++) { //start of for loop
+		//create list items
+		var li = ol.appendChild(document.createElement('li'));
+
+		//create pagination links
+		var a = li.appendChild(document.createElement('a'));
+		a.href = '#';
+		a.textContent = i + 1;
 		
-	}																				//end for loop
+		//eventlistener that calculates which students to show when pagination link is pressed
+		a.addEventListener('click', calculateShowStudents.bind(null, a.textContent));
 
-	var pagination = document.getElementsByClassName('pagination');					//selects all elements with class of 'pagination'
-	var link = pagination[0].getElementsByTagName('a');								//select all links inside first element with class of 'pagination'
-	link[0].classList.add('active');												//select first link inside first element with class of 'pagination' & add class='active'
-}																					//end of createPagination() function
+		//eventlistener that makes the link pressed become active (and all others inactive)
+		a.addEventListener('click', removeClassAddClass);
+	} //end for loop
+
+	//when the page loads - the first 10 students will be shown (not only when you click link 1)
+	var pagination = document.getElementsByClassName('pagination');
+	var link = pagination[0].getElementsByTagName('a');
+	link[0].classList.add('active');
+
+}		//end of createPagination() function
 
 
-var createSearchBar = function() {
+//This function creates a search bar and styles it to the top right
+var createSearchBar = function() {		//start of createSearchBar function
 
 	//create search bar
 	var editInput = document.createElement('INPUT');
 	editInput.setAttribute('type', 'search');
-	
+	editInput.setAttribute('id', 'searchBarId');
+	editInput.addEventListener('search', getSearchResults);
+
 	//append search bar
 	document.getElementsByClassName('page-header cf')[0].appendChild(editInput);
 	
-	//style search bar
+	//style search bar to top right
 	editInput.parentNode.style.position = 'relative';
 	editInput.style.position = 'absolute';
 	editInput.style.right = '0px';
 	editInput.placeholder = 'Search For a Student'
-}																					
+}		//end of createSearchBar function																			
 
+
+//This function gets the input value when a user searches in the search bar
+var getSearchResults = function() {
+	var input = document.getElementById('searchBarId').value;
+	input = input.toLowerCase();
+	input = input.trim();
+	
+
+	//do something with null or search == ''
+
+	//cycle through each list item
+	for (var i = 0; i < numStudents; i++) {
+
+		var test = document.getElementsByClassName('student-item cf')[i];
+		var value = test.getElementsByTagName('H3')[0].textContent;
+		
+		if (value.indexOf(input) > -1) {
+			document.getElementsByClassName('student-item cf')[i].classList.remove('hideStudents');
+		} else {
+			document.getElementsByClassName('student-item cf')[i].classList.add('hideStudents');
+		}
+	} 		// end of outer for loop
+	//call createPagination
+}		//end of getSearchResults
+
+
+//function to start everything
 var init = function() {
-	createPagination();																	//call createPagination() function
+	createPagination();
 	calculateShowStudents(1);
 	createSearchBar();
 }
 
+//Initialise
 init();
 
-//Testing ---- SEARCH FEATURE
 
-
-
-
-/*
-var searchBar = document.getElementById('searchInputId');
-    searchBar.addEventListener('submit',function(e) {
-        e.preventDefault();
-        var b = searchBar.value;
-        window.location.href = 'http://mywebsite.com/'+b;
-
-    });
-*/
+//make search results paginate if over 10 users found
+//do something when someone presses X in search feature
+//do something when results = 0 'Try searching for another name'
